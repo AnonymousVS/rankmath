@@ -5,7 +5,7 @@
 #  Copy registration data จากเว็บที่ connect แล้วไปทุกเว็บ
 # =============================================================
 
-VERSION="1.0.3"
+VERSION="1.0.6"
 
 MAX_JOBS=5
 WP_TIMEOUT=30
@@ -153,6 +153,10 @@ process_site() {
 
         // ── 3. Inject registration data ──────────────────────
         $site_url = get_option("siteurl");
+
+        // flush cache ก่อน เพื่อล้างค่าเก่าที่อาจ cache ไว้
+        wp_cache_flush();
+
         $data = [
             "username"  => "'"$U"'",
             "email"     => "'"$E"'",
@@ -165,12 +169,33 @@ process_site() {
         // เรียก Admin_Helper ให้จัดการ encrypt + บันทึก DB เอง
         $result = RankMath\Admin\Admin_Helper::get_registration_data($data);
 
+        // flush cache หลังบันทึก เพื่อให้ plugin อ่านค่าใหม่ทันที
+        wp_cache_flush();
+        wp_cache_delete("rank_math_connect_data", "options");
+        delete_transient("rank_math_connect_data");
+
+        // flush LiteSpeed Cache ถ้ามี
+        if (class_exists("LiteSpeed\Purge")) {
+            LiteSpeed\Purge::purge_all();
+        } elseif (function_exists("litespeed_purge_all")) {
+            litespeed_purge_all();
+        }
+        if (class_exists("LiteSpeed_Cache_API")) {
+            LiteSpeed_Cache_API::purge_all();
+        }
+
         // ── 4. Verify ─────────────────────────────────────────
         $verify = RankMath\Admin\Admin_Helper::get_registration_data();
         $ok = ($verify && !empty($verify["api_key"]) && $verify["api_key"] === "'"$K"'") ? "1" : "0";
 
         printf("STATUS:DONE\tSITE:%s\tSAVED:%s", $site_url, $ok);
     ' --allow-root 2>/dev/null)
+
+    # flush Redis cache ผ่าน WP-CLI ด้านนอกด้วย (กรณี wp_cache_flush ด้านในไม่พอ)
+    timeout 10 wp --path="$dir" cache flush --allow-root &>/dev/null || true
+
+    # flush LiteSpeed Cache ผ่าน WP-CLI (ถ้ามี plugin)
+    timeout 10 wp --path="$dir" litespeed-purge all --allow-root &>/dev/null || true
 
     local STATUS
     STATUS=$(echo "$EVAL_OUT" | grep -oP '(?<=STATUS:)\w+')
