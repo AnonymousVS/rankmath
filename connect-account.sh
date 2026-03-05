@@ -5,6 +5,8 @@
 #  Copy registration data จากเว็บที่ connect แล้วไปทุกเว็บ
 # =============================================================
 
+VERSION="1.0.3"
+
 MAX_JOBS=5
 WP_TIMEOUT=30
 
@@ -55,6 +57,7 @@ fi
 START_TIME=$(date +%s)
 log "======================================"
 log " BULK RANK MATH CONNECT (FREE PLAN)"
+log " Version  : v$VERSION"
 log " เริ่มเวลา : $(date '+%Y-%m-%d %H:%M:%S')"
 log " Account  : $RM_EMAIL | plan=$RM_PLAN"
 log " Jobs     : $MAX_JOBS"
