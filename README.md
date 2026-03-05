@@ -30,7 +30,31 @@
 
 ## 🚀 วิธีใช้งาน
 
-### 1. Download Script
+### ▶️ รันแบบอันเดียวจบ (แนะนำ)
+
+ไม่ต้อง download ไม่ต้อง chmod — ดึงจาก GitHub แล้วรันได้เลย:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/ufavision/rankmath/refs/heads/main/connect-account.sh)
+```
+
+หรือแบบ `wget`:
+
+```bash
+bash <(wget -qO- https://raw.githubusercontent.com/ufavision/rankmath/refs/heads/main/connect-account.sh)
+```
+
+ถ้ามี **License Key** ให้ส่งไปในคำสั่งเดียวได้เลย:
+
+```bash
+curl -s https://raw.githubusercontent.com/ufavision/rankmath/refs/heads/main/connect-account.sh \
+  | sed 's/RM_LICENSE_KEY=""/RM_LICENSE_KEY="YOUR-KEY-HERE"/' \
+  | bash
+```
+
+---
+
+### 📥 หรือ Download แล้วรันเอง
 
 ```bash
 wget https://raw.githubusercontent.com/ufavision/rankmath/refs/heads/main/connect-account.sh
