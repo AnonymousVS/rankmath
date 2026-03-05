@@ -35,7 +35,11 @@
 ไม่ต้อง download ไม่ต้อง chmod — ดึงจาก GitHub แล้วรันได้เลย:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/AnonymousVS/rankmath/refs/heads/main/connect-account.sh)
+CONF=$(mktemp) && \
+curl -s -H "Authorization: token ghp_xxxxxxxเอา Token มาใส่ก่อนรันxxxxxxxxxxx" \
+  https://raw.githubusercontent.com/AnonymousVS/config/main/rankmath-connect.conf > "$CONF" && \
+bash <(curl -s https://raw.githubusercontent.com/AnonymousVS/rankmath/main/connect-account.sh) "$CONF" && \
+rm -f "$CONF"
 ```
 
 รันด้วยอันนี้ `private`:
