@@ -182,15 +182,11 @@ process_site() {
             touch "${RESULT_DIR}/already_${UNIQ}"
             ;;
         OVERWRITE)
-            # ล้างแล้ว inject ใหม่ — ดู DONE ต่อจากนี้
-            local OLD_U
-            OLD_U=$(echo "$EVAL_OUT" | grep -oP '(?<=OLD_USER:)[^\t]*')
-            # ดึง STATUS:DONE ที่ต่อจาก OVERWRITE
-            local DONE_STATUS DS DU
-            DONE_STATUS=$(echo "$EVAL_OUT" | grep -oP '(?<=STATUS:DONE)[^\n]*' || true)
-            DU=$(echo "$EVAL_OUT" | grep -oP '(?<=SITE:)[^\t]*')
-            DS=$(echo "$EVAL_OUT" | grep -oP '(?<=SAVED:)\d+')
-            if [[ "$DS" == "1" ]]; then
+            local OLD_U DU DS
+            OLD_U=$(echo "$EVAL_OUT" | grep -oP '(?<=OLD_USER:)[^\t ]*')
+            DU=$(echo "$EVAL_OUT"    | grep -oP '(?<=SITE:)[^\t ]*')
+            DS=$(echo "$EVAL_OUT"    | grep -oP '(?<=SAVED:)\d+')
+            if echo "$EVAL_OUT" | grep -q "SAVED:1"; then
                 _log  "🔄 OVERWRITE: $LABEL | old=$OLD_U → new=$RM_USERNAME | site=$DU"
                 _log_r overwrite "$SITE | old_user=$OLD_U → new_user=$RM_USERNAME | site=$DU"
                 touch "${RESULT_DIR}/pass_${UNIQ}"
