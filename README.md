@@ -38,10 +38,12 @@
 bash <(curl -s https://raw.githubusercontent.com/AnonymousVS/rankmath/refs/heads/main/connect-account.sh)
 ```
 
-หรือแบบ `wget`:
+รันด้วยอันนี้ `private`:
 
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/AnonymousVS/rankmath/refs/heads/main/connect-account.sh)
+bash <(curl -s https://raw.githubusercontent.com/AnonymousVS/rankmath/main/connect-account.sh) \
+     <(curl -s -H "Authorization: token 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" \
+       https://raw.githubusercontent.com/AnonymousVS/config/main/rankmath-connect.conf)
 ```
 
 ถ้ามี **License Key** ให้ส่งไปในคำสั่งเดียวได้เลย:
